@@ -1,0 +1,32 @@
+module rtc_24h_clock (
+    input wire clk,
+    input wire reset,
+    output reg [4:0] hrs = 0,
+    output reg [5:0] mins = 0,
+    output reg [5:0] sec = 0
+);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            hrs <= 0;
+            mins <= 0;
+            sec <= 0;
+        end else begin
+            if (sec == 59) begin
+                sec <= 0;
+                if (mins == 59) begin
+                    mins <= 0;
+                    if (hrs == 23)
+                        hrs <= 0;
+                    else
+                        hrs <= hrs + 1;
+                end else begin
+                    mins <= mins + 1;
+                end
+            end else begin
+                sec <= sec + 1;
+            end
+        end
+    end
+
+endmodule
