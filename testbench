@@ -1,0 +1,33 @@
+`timescale 1ns / 1ps
+
+module tb_rtc_24h_clock;
+
+    reg clk = 0;
+    reg reset = 1;
+    wire [4:0] hrs;
+    wire [5:0] mins;
+    wire [5:0] sec;
+
+    rtc_24h_clock uut (
+        .clk(clk),
+        .reset(reset),
+        .hrs(hrs),
+        .mins(mins),
+        .sec(sec)
+    );
+
+    // Fast clock: 60ns period (30ns high + 30ns low)
+    always #30 clk = ~clk;
+
+    initial begin
+        // Reset for first 100ns
+        reset = 1;
+        #100;
+        reset = 0;
+
+        // Run long enough to see multiple minutes/hours
+        #1000000;
+        $finish;
+    end
+
+endmodule
